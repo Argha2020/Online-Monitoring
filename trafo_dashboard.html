@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Transformer Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-md p-6 hidden md:block">
+      <h2 class="text-xl font-bold mb-6">Transformer Logger</h2>
+      <nav class="space-y-3">
+        <button onclick="showTab('logTab')" class="w-full text-left px-4 py-2 rounded hover:bg-gray-200">Log Data</button>
+        <button onclick="showTab('viewTab')" class="w-full text-left px-4 py-2 rounded hover:bg-gray-200">View / Delete</button>
+        <button onclick="showTab('trendTab')" class="w-full text-left px-4 py-2 rounded hover:bg-gray-200">Monthly Trend</button>
+      </nav>
+    </aside>
+
+    <!-- Main -->
+    <main class="flex-1 overflow-auto p-6">
+      <!-- Log Tab -->
+      <section id="logTab" class="space-y-6">
+        <h1 class="text-2xl font-semibold">📊 Log Transformer Data</h1>
+        <form id="dataForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 bg-white p-6 rounded shadow">
+          <div><label class="block font-medium">Date<input type="date" id="date" class="mt-1 w-full border rounded p-2" required></label></div>
+          <div><label class="block font-medium">Shift<select id="shift" class="mt-1 w-full border rounded p-2" required><option value="" disabled selected>Select</option><option>A</option><option>B</option><option>C</option></select></label></div>
+          <div><label class="block font-medium">Transformer<select id="transformer" class="mt-1 w-full border rounded p-2" required><option value="" disabled selected>Select</option><option>GT‑1</option><option>GT‑2</option><option>UAT‑1</option><option>UAT‑2</option><option>SAT‑1</option><option>SAT‑2</option></select></label></div>
+          <div><label class="block font-medium">OTI (°C)<input type="number" id="oti" class="mt-1 w-full border rounded p-2" required></label></div>
+          <div><label class="block font-medium">WTI (°C)<input type="number" id="wti" class="mt-1 w-full border rounded p-2" required></label></div>
+          <div><label class="block font-medium">Tap Position<input type="text" id="tap" class="mt-1 w-full border rounded p-2" required></label></div>
+          <div><label class="block font-medium">Oil Level<input type="text" id="oilLevel" class="mt-1 w-full border rounded p-2" required></label></div>
+          <div class="md:col-span-3">
+            <button type="submit" class="w-full bg-blue-500 text-white rounded p-3 hover:bg-blue-600">Save Data</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- View Tab -->
+      <section id="viewTab" class="hidden">
+        <h1 class="text-2xl font-semibold mb-4">🔍 View & Delete Data</h1>
+        <div class="flex flex-col md:flex-row gap-4 mb-4 items-end">
+          <div><label>Date<input type="date" id="viewDate" class="mt-1 border rounded p-2"></label></div>
+          <div><label>Shift<select id="viewShift" class="mt-1 border rounded p-2"><option value="" disabled selected>Shift</option><option>A</option><option>B</option><option>C</option></select></label></div>
+          <button onclick="viewData()" class="bg-green-500 text-white rounded p-3 hover:bg-green-600">View</button>
+        </div>
+        <ul id="output" class="space-y-2"></ul>
+      </section>
+
+      <!-- Trend Tab -->
+      <section id="trendTab" class="hidden">
+        <h1 class="text-2xl font-semibold mb-4">📈 Monthly OTI & WTI Trend</h1>
+        <div class="flex flex-col md:flex-row gap-4 mb-4 items-end">
+          <div><label>Month<input type="month" id="trendMonth" class="mt-1 border rounded p-2"></label></div>
+          <div><label>Transformer<select id="trendTransformer" class="mt-1 border rounded p-2"><option>GT‑1</option><option>GT‑2</option><option>UAT‑1</option><option>UAT‑2</option><option>SAT‑1</option><option>SAT‑2</option></select></label></div>
+          <button onclick="plotTrend()" class="bg-purple-500 text-white rounded p-3 hover:bg-purple-600">Plot</button>
+        </div>
+        <div class="bg-white p-6 rounded shadow">
+          <canvas id="trendChart"></canvas>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
