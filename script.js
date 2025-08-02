@@ -77,7 +77,7 @@ function deleteEntry(date, shift, transformer, index) {
 
 // Plot monthly trend using Chart.js
 function plotTrend() {
-  const month = document.getElementById("trendMonth").value; // format YYYY-MM
+  const month = document.getElementById("trendMonth").value;
   const transformer = document.getElementById("trendTransformer").value;
   const canvas = document.getElementById("trendChart");
   const ctx = canvas.getContext("2d");
@@ -91,15 +91,14 @@ function plotTrend() {
     return;
   }
 
-  // Sort by date
   filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
 
   const labels = filtered.map(d => d.date + " (" + d.shift + ")");
   const otiData = filtered.map(d => d.oti);
   const wtiData = filtered.map(d => d.wti);
 
-  // Destroy previous chart instance
-  if (window.trendChart) {
+  // ✅ Safely destroy previous chart
+  if (window.trendChart && typeof window.trendChart.destroy === 'function') {
     window.trendChart.destroy();
   }
 
@@ -129,9 +128,7 @@ function plotTrend() {
     options: {
       responsive: true,
       plugins: {
-        legend: {
-          position: "top"
-        },
+        legend: { position: "top" },
         title: {
           display: true,
           text: `Monthly OTI & WTI Trend - ${transformer}`
@@ -139,24 +136,13 @@ function plotTrend() {
       },
       scales: {
         y: {
-          title: {
-            display: true,
-            text: "Temperature (°C)"
-          },
-          beginAtZero: true
+          beginAtZero: true,
+          title: { display: true, text: "Temperature (°C)" }
         },
         x: {
-          title: {
-            display: true,
-            text: "Date"
-          }
+          title: { display: true, text: "Date" }
         }
       }
     }
   });
 }
-
-// Default tab on load
-window.addEventListener("load", () => {
-  showTab("logTab");
-});
